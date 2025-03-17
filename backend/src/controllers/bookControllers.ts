@@ -121,7 +121,7 @@ export const getAllBooksByUser = async (req: Request, res: Response): Promise<an
     } catch (error) {
         console.log("Get user books error: ", error);
         res.status(500).json({
-            message: "Sever Error",
+            message: "Server Error",
         });
     }
 }
