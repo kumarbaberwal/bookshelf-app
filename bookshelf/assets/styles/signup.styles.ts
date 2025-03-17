@@ -37,8 +37,12 @@ export const styles = StyleSheet.create({
         color: colors.textSecondary,
         textAlign: "center",
     },
-    formContainer: { marginBottom: 16 },
-    inputGroup: { marginBottom: 20 },
+    formContainer: {
+        marginBottom: 16
+    },
+    inputGroup: {
+        marginBottom: 20
+    },
     label: {
         fontSize: 14,
         marginBottom: 8,
@@ -54,13 +58,17 @@ export const styles = StyleSheet.create({
         borderColor: colors.border,
         paddingHorizontal: 12,
     },
-    inputIcon: { marginRight: 10 },
+    inputIcon: {
+        marginRight: 10
+    },
     input: {
         flex: 1,
         height: 48,
         color: colors.textDark,
     },
-    eyeIcon: { padding: 8 },
+    eyeIcon: {
+        padding: 8
+    },
     button: {
         backgroundColor: colors.primary,
         borderRadius: 12,
