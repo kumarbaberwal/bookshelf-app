@@ -112,3 +112,16 @@ export const deleteBook = async (req: Request, res: Response): Promise<any> => {
         });
     }
 }
+
+
+export const getAllBooksByUser = async (req: Request, res: Response): Promise<any> => {
+    try {
+        const books = await Book.find({ user: req.user.userId }).sort({ createdAt: -1 });
+        res.status(200).json(books);
+    } catch (error) {
+        console.log("Get user books error: ", error);
+        res.status(500).json({
+            message: "Sever Error",
+        });
+    }
+}
