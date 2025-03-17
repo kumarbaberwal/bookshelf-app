@@ -12,7 +12,7 @@ export default function Index() {
     >
       <Text>Edit app/index.tsx to edit this screen.</Text>
       <Link href={'/(auth)'} >
-        <Text>
+        <Text>~
           Login Screen
         </Text>
       </Link>
