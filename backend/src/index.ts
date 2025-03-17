@@ -3,9 +3,11 @@ import { ENV_VARS } from './configs/config';
 import authRouter from './routes/authRoutes'
 import { connectDB } from './databases/db';
 import bookRouter from './routes/bookRoutes';
+import cors from 'cors';
 
 const app = express();
 app.use(express.json());
+app.use(cors());
 
 app.get('/', (req: Request, res: Response) => {
     res.status(200).json({
