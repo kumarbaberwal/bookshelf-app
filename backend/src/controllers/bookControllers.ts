@@ -43,7 +43,7 @@ export const bookController = async (req: Request, res: Response): Promise<any> 
 
 // pagination => infinite scrolling
 // first 5 books => then 5 books => then 5 books
-const getAllBooks = async (req: Request, res: Response): Promise<any> => {
+export const getAllBooks = async (req: Request, res: Response): Promise<any> => {
     try {
         const page = parseInt(req.query.page as string, 10) || 1;
         const limit = parseInt(req.query.limit as string, 10) || 5;
@@ -68,6 +68,47 @@ const getAllBooks = async (req: Request, res: Response): Promise<any> => {
         console.log("Error in Fetching All Books: ", error);
         res.status(500).json({
             message: 'Error in Fetching All Books',
+        });
+    }
+}
+
+export const deleteBook = async (req: Request, res: Response): Promise<any> => {
+    try {
+        const book = await Book.findById(req.params.id);
+        if (!book) {
+            return res.status(404).json({
+                message: 'Book not found',
+            });
+        }
+
+        // check if user is the creator of the book 
+
+        if (book.user.toString() !== req.user.userId.toString()) {
+            return res.status(401).json({
+                message: 'Unauthorized',
+            });
+        }
+
+        // delete the image from cloudinary as well
+        if (book.image && book.image.includes('cloudinary')) {
+            try {
+                const publicId = book.image.split('/').pop()?.split('.')[0];
+                if (publicId) {
+                    await cloudinary.uploader.destroy(publicId);
+                }
+            } catch (error) {
+                console.log("Error deleting image from the cloudinary: ", error);
+            }
+        }
+
+        await book.deleteOne();
+        res.status(200).json({
+            message: 'Book deleted successfully'
+        })
+    } catch (error) {
+        console.log("Error deleting book: ", error);
+        res.status(500).json({
+            message: 'Error deleting book',
         });
     }
 }
