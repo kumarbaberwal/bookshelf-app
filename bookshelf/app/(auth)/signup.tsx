@@ -1,9 +1,10 @@
-import { View, Text, KeyboardAvoidingView, Platform, TextInput, TouchableOpacity, ActivityIndicator } from 'react-native'
+import { View, Text, KeyboardAvoidingView, Platform, TextInput, TouchableOpacity, ActivityIndicator, Alert, ToastAndroid } from 'react-native'
 import React, { useState } from 'react'
 import { styles } from '@/assets/styles/signup.styles'
 import { Ionicons } from '@expo/vector-icons'
 import { colors } from '@/constants/colors'
 import { useRouter } from 'expo-router'
+import { useAuthStore } from '@/store/authStore'
 
 export default function Signup() {
   const router = useRouter();
@@ -11,9 +12,15 @@ export default function Signup() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
-  const [isLoading, setIsLoading] = useState(false)
+  const { user, isLoading, register } = useAuthStore();
 
-  const handleSignUp = async () => { }
+  const handleSignUp = async () => {
+    const result = await register({ username, email, password })
+    if (!result.success && result.error) {
+      // Alert.alert('Error', result.error)
+      ToastAndroid.show(result.error, ToastAndroid.LONG)
+    }
+  }
 
   return (
     <KeyboardAvoidingView

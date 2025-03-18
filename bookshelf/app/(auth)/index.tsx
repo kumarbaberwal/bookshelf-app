@@ -11,7 +11,11 @@ export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleLogin = async () => { }
+  const handleLogin = async () => {
+    fetch('http://localhost:3000/auth/login', {
+      
+    })
+  }
 
 
   return (
