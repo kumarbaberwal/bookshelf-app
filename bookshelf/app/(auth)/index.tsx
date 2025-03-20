@@ -1,20 +1,25 @@
-import { ActivityIndicator, Image, KeyboardAvoidingView, Platform, Text, TextInput, TouchableOpacity, View, } from 'react-native'
-import React, { useState } from 'react'
-import { styles } from '@/assets/styles/login.styles'
+import { styles } from '@/assets/styles/login.styles';
 import { colors } from '@/constants/colors';
-import { Ionicons } from '@expo/vector-icons'
+import { useAuthStore } from '@/store/authStore';
+import { Ionicons } from '@expo/vector-icons';
 import { Link } from 'expo-router';
+import React, { useState } from 'react';
+import { ActivityIndicator, Image, KeyboardAvoidingView, Platform, Text, TextInput, ToastAndroid, TouchableOpacity, View, } from 'react-native';
 
 export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const { isLoading, login } = useAuthStore();
 
   const handleLogin = async () => {
-    fetch('http://localhost:3000/auth/login', {
-      
-    })
+    const result = await login({ email, password });
+    if (!result.success && result.error) {
+      // Alert.alert('Error', result.error)
+      ToastAndroid.show(result.error, ToastAndroid.LONG);
+    } else {
+      ToastAndroid.show('Login successful', ToastAndroid.LONG);
+    }
   }
 
 

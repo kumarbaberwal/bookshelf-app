@@ -12,13 +12,15 @@ export default function Signup() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
-  const { user, isLoading, register } = useAuthStore();
+  const { isLoading, register } = useAuthStore();
 
   const handleSignUp = async () => {
     const result = await register({ username, email, password })
     if (!result.success && result.error) {
       // Alert.alert('Error', result.error)
       ToastAndroid.show(result.error, ToastAndroid.LONG)
+    } else {
+      ToastAndroid.show('Signup successful', ToastAndroid.LONG);
     }
   }
 

@@ -25,6 +25,10 @@ type AuthStore = {
     password: string;
   }) => Promise<{ success: boolean, error?: string }>
 
+  login: ({ email, password }: {
+    email: string, password: string
+  }) => Promise<{ success: boolean, error?: string }>
+
   checkAuth: () => Promise<void>;
 
   logout: () => Promise<void>;
@@ -73,6 +77,41 @@ export const useAuthStore = create<AuthStore>()((set) => ({
       return {
         success: false,
         error: error instanceof Error ? error.message : String(error)
+      }
+    }
+  },
+
+  login: async ({ email, password }: { email: string, password: string }) => {
+    set({ isLoading: true });
+    try {
+      const response = await fetch('https://bookshelf-node-js.onrender.com/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email,
+          password,
+        })
+      });
+
+      const data = await response.json();
+      if (!response.ok || !data.user) throw new Error(data.message || "Something went wrong");
+
+      await AsyncStorage.setItem('user', JSON.stringify(data.user));
+      await AsyncStorage.setItem('token', data.user.token);
+
+      set({ user: data.user, token: data.user.token, isLoading: false });
+
+      return {
+        success: true,
+      }
+
+    } catch (error) {
+      set({ isLoading: false });
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : String(error),
       }
     }
   },
