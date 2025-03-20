@@ -24,6 +24,10 @@ type AuthStore = {
     email: string;
     password: string;
   }) => Promise<{ success: boolean, error?: string }>
+
+  checkAuth: () => Promise<void>;
+
+  logout: () => Promise<void>;
 }
 
 export const useAuthStore = create<AuthStore>()((set) => ({
@@ -38,7 +42,7 @@ export const useAuthStore = create<AuthStore>()((set) => ({
   }) => {
     set({ isLoading: true })
     try {
-      const response = await fetch('http://192.168.210.140:3000/auth/register', {
+      const response = await fetch('https://bookshelf-node-js.onrender.com/auth/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -51,7 +55,7 @@ export const useAuthStore = create<AuthStore>()((set) => ({
       })
 
       const data = await response.json();
-      console.log("The coming data is: ", data);
+      // console.log("The coming data is: ", data);
       if (!response.ok || !data.user) throw new Error(data.message || "Something went wrong");
 
       await AsyncStorage.setItem('user', JSON.stringify(data.user))
@@ -65,11 +69,28 @@ export const useAuthStore = create<AuthStore>()((set) => ({
 
     } catch (error) {
       set({ isLoading: false })
-      console.log(error);
+      // console.log(error);
       return {
         success: false,
         error: error instanceof Error ? error.message : String(error)
       }
     }
-  }
-}))
+  },
+
+  checkAuth: async () => {
+    try {
+      const token = await AsyncStorage.getItem('token');
+      const jsonUser = await AsyncStorage.getItem('user');
+      const user = jsonUser ? JSON.parse(jsonUser) : null;
+      set({ user, token })
+    } catch (error) {
+      console.log("Error in checkAuth: ", error);
+    }
+  },
+
+  logout: async () => {
+    await AsyncStorage.removeItem('token');
+    await AsyncStorage.removeItem('user');
+    set({ user: null, token: null })
+  },
+}));
