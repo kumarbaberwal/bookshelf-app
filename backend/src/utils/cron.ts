@@ -1,8 +1,8 @@
-import cron from 'cron'
+import { CronJob } from 'cron'
 import https from 'https'
 import { ENV_VARS } from '../configs/config'
 
-export const job = new cron.CronJob('*/14 * * * *', async () => {
+export const cronJob = new CronJob('*/14 * * * *', async () => {
     https.get(ENV_VARS.API_URL, (res) => {
         if (res.statusCode === 200) {
             console.log("GET request sent successfully");
