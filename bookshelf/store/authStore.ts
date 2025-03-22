@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { API_URL } from '@/constants/api';
 
 // {"user": {"__v": 0, "_id": "67d9cdd76309355d84b7b705", "createdAt": "2025-03-18T19:47:35.324Z", "email": "kumar@gmail.com", "profileImage": "https://api.dicebear.com/7.x/avataaars/svg?seed=Nitesh Kumar", "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2N2Q5Y2RkNzYzMDkzNTVkODRiN2I3MDUiLCJpYXQiOjE3NDIzMjcyNTUsImV4cCI6MTc0MzYyMzI1NX0.J91n_a-ufmz4ss74LusTzV6UOM9BDxOUsf8VnWUxjN8", "updatedAt": "2025-03-18T19:47:35.324Z", "username": "Nitesh Kumar"}}
 
@@ -46,7 +47,7 @@ export const useAuthStore = create<AuthStore>()((set) => ({
   }) => {
     set({ isLoading: true })
     try {
-      const response = await fetch('https://bookshelf-node-js.onrender.com/auth/register', {
+      const response = await fetch(`${API_URL}/auth/register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -84,7 +85,7 @@ export const useAuthStore = create<AuthStore>()((set) => ({
   login: async ({ email, password }: { email: string, password: string }) => {
     set({ isLoading: true });
     try {
-      const response = await fetch('https://bookshelf-node-js.onrender.com/auth/login', {
+      const response = await fetch(`${API_URL}/auth/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -76,6 +76,7 @@ export const styles = StyleSheet.create({
     borderColor: colors.border,
     padding: 12,
     height: 100,
+    textAlignVertical: 'top',
     color: colors.textDark,
   },
   ratingContainer: {
