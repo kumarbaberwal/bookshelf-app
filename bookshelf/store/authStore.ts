@@ -18,7 +18,8 @@ type User = {
 type AuthStore = {
   user: User | null,
   token: string | null,
-  isLoading: boolean
+  isLoading: boolean,
+  isCheckingAuth: boolean,
 
   register: ({ username, email, password }: {
     username: string;
@@ -39,6 +40,7 @@ export const useAuthStore = create<AuthStore>()((set) => ({
   user: null,
   token: null,
   isLoading: false,
+  isCheckingAuth: true,
 
   register: async ({ username, email, password }: {
     username: string;
@@ -125,6 +127,8 @@ export const useAuthStore = create<AuthStore>()((set) => ({
       set({ user, token })
     } catch (error) {
       console.log("Error in checkAuth: ", error);
+    } finally {
+      set({ isCheckingAuth: false })
     }
   },
 
