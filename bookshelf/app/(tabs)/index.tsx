@@ -140,7 +140,7 @@ export default function Home() {
   }
 
 
-  if (loading) return <Loader />
+  if (loading && !refreshing) return <Loader />
 
   return (
     <View
