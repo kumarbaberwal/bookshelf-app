@@ -18,37 +18,67 @@ export default function Home() {
   const [hasMore, setHasMore] = useState(true)
 
 
+  // const fetchBooks = async (pageNum = 1, refresh = false) => {
+  //   try {
+  //     if (refreshing) setRefreshing(true);
+  //     else if (pageNum === 1) setLoading(true);
+
+  //     const response = await fetch(`${API_URL}/books?page=${pageNum}&limit=5`, {
+  //       headers: {
+  //         Authorization: `Bearer ${token}`,
+  //       }
+  //     })
+
+  //     const data = await response.json();
+
+  //     if (!response.ok) throw new Error(data.message || 'Failed to fetch books!');
+
+
+  //     const uniqueBooks = refresh || pageNum === 1 ? data.books :
+  //       Array.from(new Set([...books, ...data.books].map((book) => book._id))).map((id) => [...books, ...data.books].find((book) => book._id === id))
+
+  //     setBooks(uniqueBooks);
+
+  //     // setBooks((prevBooks) => [...prevBooks, ...data.books])
+  //     setHasMore(pageNum < data.totalPages);
+  //     setPage(pageNum + 1);
+  //   } catch (error) {
+  //     console.log(error)
+  //   } finally {
+  //     if (refreshing) setRefreshing(false);
+  //     else if (pageNum === 1) setLoading(false)
+  //   }
+  // }
+
+
   const fetchBooks = async (pageNum = 1, refresh = false) => {
     try {
-      if (refreshing) setRefreshing(true);
+      if (refresh) setRefreshing(true);
       else if (pageNum === 1) setLoading(true);
 
       const response = await fetch(`${API_URL}/books?page=${pageNum}&limit=5`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        }
-      })
+        headers: { Authorization: `Bearer ${token}` },
+      });
 
       const data = await response.json();
-
       if (!response.ok) throw new Error(data.message || 'Failed to fetch books!');
 
+      setBooks((prevBooks) => {
+        if (refresh || pageNum === 1) return data.books;
+        return [...prevBooks, ...data.books]; // Append new books
+      });
 
-      const uniqueBooks = refresh || pageNum === 1 ? data.books :
-        Array.from(new Set([...books, ...data.books].map((book) => book._id))).map((id) => [...books, ...data.books].find((book) => book._id === id))
-
-      setBooks(uniqueBooks);
-
-      // setBooks((prevBooks) => [...prevBooks, ...data.books])
-      setHasMore(pageNum < data.totalPages);
-      setPage(pageNum + 1);
+      setHasMore(data.books.length > 0); // Check if there are more books
+      setPage(pageNum); // Correctly update page number
     } catch (error) {
-      console.log(error)
+      console.log(error);
     } finally {
-      if (refreshing) setRefreshing(false);
-      else if (pageNum === 1) setLoading(false)
+      if (refresh) setRefreshing(false);
+      else if (pageNum === 1) setLoading(false);
     }
-  }
+  };
+
+
 
   useEffect(() => {
     fetchBooks();
@@ -59,7 +89,6 @@ export default function Home() {
     if (hasMore && !loading && !refreshing) {
       await fetchBooks(page + 1);
     }
-
   }
 
   const renderItem = ({ item }: any) => {
