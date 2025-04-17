@@ -121,7 +121,7 @@ export default function Signup() {
               <Text
                 style={styles.label}
               >
-                Username
+                Password
               </Text>
               <View
                 style={styles.inputContainer}
